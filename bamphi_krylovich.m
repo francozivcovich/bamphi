@@ -116,10 +116,6 @@ end
 function [ f_out, f_aux ] = cof_krylov( t, H, x, d, p, n_V )
 % Compute in a competitive time the vector f_out = expm( t*H ) * e1;
 
-  % H
-  % d
-  % t
-  % pause
   % Compute phipm( H ) * eye( length( H ), 1 )
   m = length( H ) - 1;
   f_out = [ d( p + 1 ); zeros( m,1 ) ];
