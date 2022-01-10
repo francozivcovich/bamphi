@@ -61,10 +61,9 @@ function [ f, info ] = bamphi( t, A, At, u, opts, info )
 %
 % TODO:
 %
-% - verify if the timesteps alignment check is correctly done
 % - fatti dare i punti
 % - handle almost zero solution case ( sqrt( v'*v ) == 0 and norm( v ) =/= 0)
-% - togli quel ( abs( cf_out( j ) ) < opts.tol * sqrt( w' * w ) ) dentro bamphi_krylovich se s > 1 che tanto non serve a un cazzo
+% - togli quel ( abs( cf_out( j ) ) < opts.tol * sqrt( w' * w ) ) dentro bamphi_krylovich se s > 1 che tanto non serve
 
   %% 01. CHECK INPUTS
   if ( nargin < 4 ), error('Not enough input arguments.'); end
