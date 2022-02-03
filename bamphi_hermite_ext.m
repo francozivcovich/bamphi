@@ -29,7 +29,6 @@ function x = bamphi_hermite_ext( x, z, conjugated, max_No )
   end
   if isempty( x )
     [ ~, idx ] = max( abs( z ) );
-    % [ ~, idx ] = min( z );
     x( 1 ) = z( idx( 1 ) ); z( idx( 1 ) ) = [];
     if ( conjugated && imag( x ) )
       idx = find( z == conj( x ) );
@@ -73,7 +72,8 @@ end
 function [ x, w_x ] = hermite_sort( x, w_x, dif, z, conjugated, max_No )
   n_x = length( x ); n_z = length( z ); N = n_x + n_z;
   % Build rectangular Vandermonde
-  X = [ cumprod( repmat( z, 1, N - dif - 1 ), 2, 'reverse' ), ones( n_z,1 ) ];
+  % X = [ cumprod( repmat( z, 1, N - dif - 1 ), 2, 'reverse' ), ones( n_z,1 ) ];
+  X = [ fliplr( cumprod( repmat( z, 1, N - dif - 1 )' )' ), ones( n_z,1 ) ];
   % Differentiation vector ( dif_vec * w_x = d_difw_x )
   dif_vec = exp( gammaln( N : -1 : dif+1 ) - gammaln( N - dif : -1 : 1 ) ).';
   while ( ~isempty( z ) && n_x <= max_No )
