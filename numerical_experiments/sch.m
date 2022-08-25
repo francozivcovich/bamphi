@@ -12,7 +12,7 @@ function memo = sch( test )
   mu = 1;
 
   % g  = @( u ) mu * ( u .* abs( u ).^2 );
-  g  = @( u ) mu; % c'e un motivo non sono stupidoooo (guardare integratore LR)
+  g  = @( u ) mu; % c'e un motivo ma non me lo ricordo (guardare integratore LR)
 
   % Space discretization
   Ns = test.Ns;

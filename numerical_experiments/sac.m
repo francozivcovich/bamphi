@@ -26,7 +26,6 @@ function memo = sac( test )
 
   % Initial datum
   u0 = sin( 2 * pi * X(:) ) .* sin( 2 * pi * Y(:) );
-  % contourf( X, Y, reshape( u0, size( X ) ) ), colorbar, pause
   u0 = u0 * ones( 1, test.MoCa );
 
   % Time discretization
