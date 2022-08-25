@@ -178,6 +178,7 @@ function [ info, f, f_, done ] = timesteps_manager( j, T, predec, Atilde, A, u, 
 
   % Recursive bit
   if ~done( predec( j ) )
+    disp('Ouch');
     [ info, f, f_, done ] = timesteps_manager( predec( j ), T, predec, Atilde, A, u, idu, p, opts, info, f, f_, done );
     done( predec( j ) ) = true;
   end
@@ -435,7 +436,7 @@ function [ p_A, p_A_, its, ret ] = bamphi_talezervich( id, jump, opts, info, Ati
   else
     cof_w2 = d_r;
     % Successive Iterations
-    % we got complex data points and they're in conjugated pairs: go with Talezer
+    % we got complex data points and they're in conjugated pairs: go with Tal-Ezer
     while ( k < m + 1 )
       if ( info.A.his.map{ id }( k + 1 ) == -1 ) || not( rly )
         % Coefficient and Product

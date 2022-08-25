@@ -1,5 +1,5 @@
 function memo = sch( test )
-
+% NONSMOOTH CUBIC SCHRODINGER equation:
   % Equation parameters
   t0 = 0.00e+000;
   tf = 0.10e+000;

@@ -6,18 +6,23 @@ function main( verbosity )
   if not( nargin )
     verbosity = 1;
   end
-
   clc
+  if verbosity == 1
+    fprintf('If you want me to talk less, set verbosity lower. Valid verbosity options are:\n')
+    fprintf('    - 0 for shut up;\n')
+    fprintf('    - anything between 0 and 1 for few comments;\n')
+    fprintf('    - 1 for me talking a lot.\n\n')
+  end
   addpath( genpath('../') )
 
   % Choose the tests you want to run
   % (just comment the lines with the tests you DON'T want to run):
   which_tests{ 1 } = 'adr'; % Advection-Diffusion-Reaction equation
   which_tests{ 2 } = 'brg'; % Burger equation
-  % which_tests{ 3 } = 'scS'; % smooth cubic Schrodinger equation
-  % which_tests{ 4 } = 'sch'; % low-regularity cubic Schrodinger equation
-  % which_tests{ 5 } = 'skg'; % low-regularity cubic Schrodinger equation
-  % which_tests{ 6 } = 'sac'; % Stochastic Allen-Cahn
+  which_tests{ 3 } = 'scS'; % smooth cubic Schrodinger equation
+  which_tests{ 4 } = 'sch'; % low-regularity cubic Schrodinger equation
+  which_tests{ 5 } = 'skg'; % low-regularity cubic Schrodinger equation
+  which_tests{ 6 } = 'sac'; % Stochastic Allen-Cahn
 
 
   for test_idx = 1 : length( which_tests )
@@ -28,14 +33,14 @@ function main( verbosity )
       end
       label = 'adr';
       test.equation      = 'adr';
-      test.Ns            = [ 500 500 ];
+      test.Ns            = [ 500 500 ] / 50;
       test.Nt            = 2^8 : 2^8 : 2^11;
       test.integrator    = 'exprk4s6';
       test.routines      = {'bamphi','kiops'};
       test.compute_error = true;
       %
       if verbosity > 0
-        fprintf('On: '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
+        fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
       memo = feval( test.equation, test );
@@ -56,7 +61,7 @@ function main( verbosity )
       end
       label = 'brg';
       test.equation      = 'brg';
-      test.Ns            = [ 500, 500 ];
+      test.Ns            = [ 500, 500 ] / 50;
       Nt = 2.^[4:7];
       Nt = sort( [Nt, cumsum( Nt ) / 2 ]);
       test.Nt            = Nt( 1:end-2 );
@@ -65,7 +70,7 @@ function main( verbosity )
       test.compute_error = true;
       %
       if verbosity > 0
-        fprintf('On: '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
+        fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
       memo = feval( test.equation, test );
@@ -86,14 +91,14 @@ function main( verbosity )
       end
       label = 'scS';
       test.equation      = 'scS';
-      test.Ns            = [ 100, 100 ];
+      test.Ns            = [ 100, 100 ] / 10;
       test.Nt            = 2.^[ 1 : 8 ];
       test.integrator    = 'cuschss68';
       test.routines      = {'bamphi','kiops'};
       test.compute_error = true;
       %
       if verbosity > 0
-        fprintf('On: '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
+        fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
       memo = feval( test.equation, test );
@@ -114,7 +119,7 @@ function main( verbosity )
       end
       label = 'sch';
       test.equation      = 'sch';
-      test.Ns            = [ 100 100 ];
+      test.Ns            = [ 100 100 ] / 10;
       test.Nt            = 2.^[ 3 : 11 ];
       test.theta         = 5 / 2;
       test.integrator    = 'cuschRS21';
@@ -122,7 +127,7 @@ function main( verbosity )
       test.compute_error = true;
       %
       if verbosity > 0
-        fprintf('On: '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
+        fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
       memo = feval( test.equation, test );
@@ -148,13 +153,13 @@ function main( verbosity )
       % RA: I compute Ritz's values with R and run calculations with A (only bamphi)
       label = 'skg';
       test.equation      = 'skg';
-      test.Ns            = [ 500 500 ];
+      test.Ns            = [ 500 500 ] / 50;
       test.Nt            = 2.^[ 4 : 11 ];
       test.integrator    = 'exptg2s1';
       test.compute_error = false;
       %
       if verbosity > 0
-        fprintf('On: '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
+        fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
 
@@ -200,7 +205,7 @@ function main( verbosity )
       test.compute_error = true;
       %
       if verbosity > 0
-        fprintf('On: '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
+        fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
       memo = feval( test.equation, test );
@@ -214,7 +219,7 @@ function main( verbosity )
 
       clear memo label test
     end
-
+    fprintf('\n\n\n\n\n')
   end
    rmpath( genpath('../') )
 end

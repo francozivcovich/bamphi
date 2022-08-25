@@ -1,4 +1,5 @@
 function memo = scS( test )
+% SMOOTH CUBIC SCHRODINGER equation:
 
   % Equation parameters
   t0 = 0.00e+000;

@@ -1,4 +1,6 @@
 function memo = skg( test )
+% SINE KLEIN GORDON equation:
+
 
   mode = test.mode;
 

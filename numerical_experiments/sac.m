@@ -1,4 +1,6 @@
 function memo = sac( test )
+% STOCHASTIC ALLEN CAHN equation:
+
 
   % Equation parameters
   t0 = 0.00e+000;
