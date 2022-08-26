@@ -33,11 +33,11 @@ function main( verbosity )
       end
       label = 'adr';
       test.equation      = 'adr';
-      test.Ns            = [ 500 500 ] / 50;
+      test.Ns            = [ 500 500 ];
       test.Nt            = 2^8 : 2^8 : 2^11;
       test.integrator    = 'exprk4s6';
       test.routines      = {'bamphi','kiops'};
-      test.compute_error = true;
+      test.compute_error = false;
       %
       if verbosity > 0
         fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
@@ -219,7 +219,11 @@ function main( verbosity )
 
       clear memo label test
     end
-    fprintf('\n\n\n\n\n')
+    if verbosity == 1
+      fprintf('\n\n\n\n\n')
+    else
+      fprintf('\n')
+    end
   end
    rmpath( genpath('../') )
 end

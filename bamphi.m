@@ -177,8 +177,9 @@ function [ info, f, f_, done ] = timesteps_manager( j, T, predec, Atilde, A, u, 
   end
 
   % Recursive bit
+  % (I know you don't like it but it NEVER occurs if you don't ask for timesteps
+  % scattered in the complex plane)
   if ~done( predec( j ) )
-    disp('Ouch');
     [ info, f, f_, done ] = timesteps_manager( predec( j ), T, predec, Atilde, A, u, idu, p, opts, info, f, f_, done );
     done( predec( j ) ) = true;
   end
