@@ -7,7 +7,7 @@ function memo = adr( test )
 %
 % for Omega = [0,1]^2, t in [0,0.25], epsilon = 1/8, alpha=-3/2, gamma = 1000.
 % The initial data is u(0) = 256x^2y^2(1-x)^2(1-y)^2, while we set homogeneous
-% Dirichlet boundary conditions over { x,y in \partial Omega: xy = 0 } and
+% Dirichlet boundary conditions over {(x,y) in \partial Omega: xy = 0} and
 % homogeneous Neumann conditions elsewhere.
 %
 % For the space discretization of this problem we set N_x = N_y = 500

@@ -28,14 +28,13 @@ function main( verbosity )
   for test_idx = 1 : length( which_tests )
 
     if strcmp( which_tests{ test_idx }, 'adr' )
-
       label = 'adr';
       test.equation      = 'adr';
       test.Ns            = [ 500 500 ];
       test.Nt            = 2^8 : 2^8 : 2^11;
       test.integrator    = 'exprk4s6';
       test.routines      = {'bamphi','kiops'};
-      test.compute_error = false;
+      test.compute_error = true;
       %
       if verbosity > 0
         fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
@@ -59,13 +58,13 @@ function main( verbosity )
         final_display( test )
       end
 
-      clear memo label test
+      clear memo label test store
     end
 
     if strcmp( which_tests{ test_idx }, 'brg' )
       label = 'brg';
       test.equation      = 'brg';
-      test.Ns            = [ 500, 500 ] / 50;
+      test.Ns            = [ 500, 500 ];
       Nt = 2.^[4:7];
       Nt = sort( [Nt, cumsum( Nt ) / 2 ]);
       test.Nt            = Nt( 1:end-2 );
@@ -95,13 +94,13 @@ function main( verbosity )
         final_display( test )
       end
 
-      clear memo label test
+      clear memo label test store
     end
 
     if strcmp( which_tests{ test_idx }, 'scS' )
       label = 'scS';
       test.equation      = 'scS';
-      test.Ns            = [ 100, 100 ] / 10;
+      test.Ns            = [ 100, 100 ];
       test.Nt            = 2.^[ 1 : 8 ];
       test.integrator    = 'cuschss68';
       test.routines      = {'bamphi','kiops'};
@@ -129,13 +128,13 @@ function main( verbosity )
         final_display( test )
       end
 
-      clear memo label test
+      clear memo label test store
     end
 
     if strcmp( which_tests{ test_idx }, 'sch' )
       label = 'sch';
       test.equation      = 'sch';
-      test.Ns            = [ 100 100 ] / 10;
+      test.Ns            = [ 100 100 ];
       test.Nt            = 2.^[ 3 : 11 ];
       test.theta         = 5 / 2;
       test.integrator    = 'cuschRS21';
@@ -164,7 +163,7 @@ function main( verbosity )
         final_display( test )
       end
 
-      clear memo label test
+      clear memo label test store
     end
 
     if strcmp( which_tests{ test_idx }, 'skg' )
@@ -175,7 +174,7 @@ function main( verbosity )
       % RA: I compute Ritz's values with R and run calculations with A (only bamphi)
       label = 'skg';
       test.equation      = 'skg';
-      test.Ns            = [ 500 500 ] / 50;
+      test.Ns            = [ 500 500 ] ;
       test.Nt            = 2.^[ 4 : 11 ];
       test.integrator    = 'exptg2s1';
       test.compute_error = false;
@@ -218,14 +217,14 @@ function main( verbosity )
         final_display( test )
       end
 
-      clear memo label test
+      clear memo label test store
     end
 
 
     if strcmp( which_tests{ test_idx }, 'sac' )
       label = 'sac';
       test.equation      = 'sac';
-      test.Ns            = [ 100 100 ] / 10;
+      test.Ns            = [ 100 100 ];
       test.Nt            = 2.^[ 2 : 11 ]; % important: timesteps must be one multiple of the other for stochasticity function
       test.MoCa          = 1e2;
       test.integrator    = 'stochexprk1';
@@ -254,7 +253,7 @@ function main( verbosity )
         final_display( test )
       end
 
-      clear memo label test
+      clear memo label test store
     end
     if verbosity == 1
       fprintf('\n\n\n\n\n')

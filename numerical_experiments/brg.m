@@ -7,7 +7,7 @@ function memo = brg( test )
 %
 % for Omega = [-5/4,5/4]^2, t in [0,2], and epsilon = 4/100. The initial data
 % is u(0) = exp(-10\sin^2(x/2)-10\sin^2(y/2)), while we set homogeneous
-% Dirichlet boundary conditions over { x,y in \partial Omega: y <= -x } and
+% Dirichlet boundary conditions over {(x,y) in \partial Omega: y <= -x} and
 % homogeneous Neumann conditions elsewhere.
 % For the space discretization of this problem we set 500 discretization points
 % for each dimension while for time marching we perform N_t = 8, 16, 24, 32, 56,
