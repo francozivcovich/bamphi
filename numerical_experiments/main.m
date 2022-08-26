@@ -28,9 +28,7 @@ function main( verbosity )
   for test_idx = 1 : length( which_tests )
 
     if strcmp( which_tests{ test_idx }, 'adr' )
-      if verbosity == 1
-        help adr
-      end
+
       label = 'adr';
       test.equation      = 'adr';
       test.Ns            = [ 500 500 ];
@@ -43,6 +41,15 @@ function main( verbosity )
         fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
+      %
+      if verbosity == 1
+        help (which_tests{ test_idx })
+        fprintf('\n')
+        help ([test.integrator,'_bamphi'])
+        fprintf('\n')
+        help ([test.integrator,'_kiops'])
+      end
+      %
       memo = feval( test.equation, test );
       store.(label).test = test;
       store.(label).memo = memo;
@@ -56,9 +63,6 @@ function main( verbosity )
     end
 
     if strcmp( which_tests{ test_idx }, 'brg' )
-      if verbosity == 1
-        help brg
-      end
       label = 'brg';
       test.equation      = 'brg';
       test.Ns            = [ 500, 500 ] / 50;
@@ -73,6 +77,15 @@ function main( verbosity )
         fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
+      %
+      if verbosity == 1
+        help (which_tests{ test_idx })
+        fprintf('\n')
+        help ([test.integrator,'_bamphi'])
+        fprintf('\n')
+        help ([test.integrator,'_kiops'])
+      end
+      %
       memo = feval( test.equation, test );
       store.(label).test = test;
       store.(label).memo = memo;
@@ -86,9 +99,6 @@ function main( verbosity )
     end
 
     if strcmp( which_tests{ test_idx }, 'scS' )
-      if verbosity == 1
-        help scS
-      end
       label = 'scS';
       test.equation      = 'scS';
       test.Ns            = [ 100, 100 ] / 10;
@@ -101,6 +111,15 @@ function main( verbosity )
         fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
+      %
+      if verbosity == 1
+        help (which_tests{ test_idx })
+        fprintf('\n')
+        help ([test.integrator,'_bamphi'])
+        fprintf('\n')
+        help ([test.integrator,'_kiops'])
+      end
+      %
       memo = feval( test.equation, test );
       store.(label).test = test;
       store.(label).memo = memo;
@@ -114,9 +133,6 @@ function main( verbosity )
     end
 
     if strcmp( which_tests{ test_idx }, 'sch' )
-      if verbosity == 1
-        help sch
-      end
       label = 'sch';
       test.equation      = 'sch';
       test.Ns            = [ 100 100 ] / 10;
@@ -130,6 +146,15 @@ function main( verbosity )
         fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
+      %
+      if verbosity == 1
+        help (which_tests{ test_idx })
+        fprintf('\n')
+        help ([test.integrator,'_bamphi'])
+        fprintf('\n')
+        help ([test.integrator,'_kiops'])
+      end
+      %
       memo = feval( test.equation, test );
       store.(label).test = test;
       store.(label).memo = memo;
@@ -143,9 +168,6 @@ function main( verbosity )
     end
 
     if strcmp( which_tests{ test_idx }, 'skg' )
-      if verbosity == 1
-        help skg
-      end
       % This test is messy 'cause we launch kiops in a way and bamphi in another.
       % MODALITIES (for more details, see BAMPHI paper):
       % AA: I use the (very) sparse, highly non-normal A to do everything
@@ -162,6 +184,15 @@ function main( verbosity )
         fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
+      %
+      if verbosity == 1
+        help (which_tests{ test_idx })
+        fprintf('\n')
+        help ([test.integrator,'_bamphi'])
+        fprintf('\n')
+        help ([test.integrator,'_kiops'])
+      end
+      %
 
       % kiops
       test.routines      = {'kiops'};
@@ -192,9 +223,6 @@ function main( verbosity )
 
 
     if strcmp( which_tests{ test_idx }, 'sac' )
-      if verbosity == 1
-        help sac
-      end
       label = 'sac';
       test.equation      = 'sac';
       test.Ns            = [ 100 100 ] / 10;
@@ -208,6 +236,15 @@ function main( verbosity )
         fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
         disp('Test information:'),disp(test)
       end
+      %
+      if verbosity == 1
+        help (which_tests{ test_idx })
+        fprintf('\n')
+        help ([test.integrator,'_bamphi'])
+        fprintf('\n')
+        help ([test.integrator,'_kiops'])
+      end
+      %
       memo = feval( test.equation, test );
       store.(label).test = test;
       store.(label).memo = memo;

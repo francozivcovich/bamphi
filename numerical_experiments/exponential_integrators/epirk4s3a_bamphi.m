@@ -1,8 +1,6 @@
 function [ u, info ] = epirk4s3a_bamphi( u, k, t, Jfun, f, opts, info )
 
   persistent suggested_arnoldi_size
-  % suggested_arnoldi_size
-  % disp('- - - - - - - - - - -  - - - - - - - - -  - - - - - - - -  - - - - - -');
 
   fn = f( u );
   rfun = @( v ) f( v ) - fn - Jfun( v - u );
