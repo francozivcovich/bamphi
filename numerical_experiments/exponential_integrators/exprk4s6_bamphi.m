@@ -1,14 +1,15 @@
 function [ u, info ] = exprk4s6_bamphi( u, k, t, A, g, opts, info, B )
 % exprk4s6_bamphi:
 %
-% There are 3 main ways for bamphi to carry on this exponential integration:
+% There are 3 main ways to carry on this exponential integration with bamphi:
 %
-% 1. compute 1 IOM-Arnoldi + recycle info for each call and each expint step;
-% 2. compute 1 IOM-Arnoldi PER CALL inside the FIRST expint step + recycle info;
-% 3. compute IOM-Arnoldi each time bamphi is called.
+% 1. compute 1 (IOM)-Arnoldi and recycle info for each call and each expint step;
+% 2. (default) compute 1 (IOM)-Arnoldi PER CALL inside the FIRST expint step and
+%    recycle info;
+% 3. compute (IOM)-Arnoldi each time bamphi is called.
 %
-% You should run 1. if you are really against IOM-Arnoldi (mat-vec product
-% very cheap but huge matrix sizes make storage a problem) and 3. if IOM-Arnoldi
+% You should run 1. if you are really against (IOM)-Arnoldi (mat-vec product
+% very cheap but huge matrix sizes make storage a problem) and 3. if (IOM)-Arnoldi
 % doesn't bother you a lot (mat-vec really expensive but modest matrix sizes).
 %
 % (If in 1. you may also consider the low_storage option (see bamphi help).)
@@ -20,12 +21,13 @@ function [ u, info ] = exprk4s6_bamphi( u, k, t, A, g, opts, info, B )
 % There are other strategies: e.g. say you have a matrix B similar to A but for
 % some reason (see sine-Gordon example in BAMPHI paper) you prefer computing
 % Ritz's values with B and run calculations with A. Then you just give B as
-% input and any strategy is overruled by this.
+% input to exprk4s6_bamphi and any strategy is overruled by this.
 %
-% Hybrid strategies, such as the 2nd but recomputing IOM-Arnoldi every P expint
+% Hybrid strategies, such as the 2nd but recomputing (IOM)-Arnoldi every P expint
 % steps are possible but have to be handled in concert with the outside of this
 % function.
 %
+
   gn = g( t, u );
   Fn = A( u ) + gn;
   z = zeros( length( u ), 1 );

@@ -7,27 +7,15 @@ function memo = adr( test )
 %
 % for Omega = [0,1]^2, t in [0,0.25], epsilon = 1/8, alpha=-3/2, gamma = 1000.
 % The initial data is u(0) = 256x^2y^2(1-x)^2(1-y)^2, while we set homogeneous
-% Dirichlet boundary conditions over {(x,y) in \partial Omega: xy = 0} and
-% homogeneous Neumann conditions elsewhere.
+% Neumann boundary conditions over {(x,y) in \partial Omega: xy = 0} and
+% homogeneous Dirichlet conditions elsewhere.
 %
 % For the space discretization of this problem we set N_x = N_y = 500
 % discretization points for each dimension while for time marching we perform
 % N_t = 256, 512, 768, 1024, 1280, 1536, 1792, and 2048 time steps with the
 % fourth order Runge-Kutta exponential integrator expRK4s6.
 %
-% This integrator consists in computing 4 different linear combinations of
-% phi-functions: we can compute each one of them with a single call to bamphi.
-% The total cost amounts then to 4*N_t calls to the bamphi/kiops routine.
-% The exponential integrator expRK4s6 is such that linearity changes
-%   x (obviously) never inside any call of bamphi
-%   x (obviously) never inside any exponential integration step
-%   x never throughout the whole exponential integration process
-% therefore with bamphi we could fully integrate this equation in time with
-% just ONE call of the Arnoldi process.
-% Nevertheless, we found advantageous to compute a dedicated set of Ritz's
-% values for each of the four calls to the bamphi routine during the FIRST
-% exponential integration step amounting to a grand  total of 4 calls to the
-% Arnoldi process.
+
 
   % Equation parameters
   t0 = 0.00e+000;
@@ -100,15 +88,11 @@ function memo = adr( test )
   for rout = 1 : length( test.routines )
     disp(['- Running tests with ', test.routines{ rout } ]);
     for l = 1 : length( Nt )
-      opts = []; info = [];
+      opts = []; info = []; clear_integrators()
       if     strcmp( test.routines{ rout }, 'bamphi' )
         opts.tol = tol;
-        clear epirk4s3a_bamphi
-        clear exprk4s6_bamphi
       elseif strcmp( test.routines{ rout }, 'kiops' )
         opts = tol;
-        clear epirk4s3a_kiops
-        clear exprk4s6_kiops
       end
       clear matfun
       k = ( tf - t0 ) / Nt( l );
