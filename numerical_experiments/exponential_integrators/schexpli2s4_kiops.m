@@ -1,5 +1,11 @@
-function [ u, m_opt ] = cuschRS21_kiops( u, k, t, A, g, tol, m_opt )
-
+function [ u, m_opt ] = schexpli2s4_kiops( u, k, t, A, g, tol, m_opt )
+% schexpli2s4_kiops
+%
+% There is only one strategy to run this exponential integrator in combination
+% with kiops: the standard one.
+% It is extremely advantageous to remember the suggested Arnoldi size m_opt,
+% that is why we do output it.
+%
   mu = g( NaN, NaN );
   if isempty( m_opt )
     m_opt = 10 * ones( 1,5 ); % set to default
