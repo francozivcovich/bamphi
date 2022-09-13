@@ -19,14 +19,16 @@ function [ f, info ] = bamphi( t, A, At, u, opts, info )
 %
 %   *    A: (mandatory) function handle such that  A( x ) = A  * x, with A as in ( 1 )
 %
-%   *   At: (optional)  function handle such that At( x ) = A' * x
+%   *   At: (optional/not recommended) function handle such that At( x ) = A' * x
 %
 %   *    u: (mandatory) n x p matrix as in ( 1 )
 %
 %   * opts: (optional)  is a structure whose fields are the desired options (see below)
 %
-%   * info: (optional)  if BAMPHI was run at least once, info can be given as
-%           input and save much work.
+%   * info: (optional)  info contains important information and it contains the
+%                       suggested interpolation set. Suggestion: if you want to
+%                       mess things up do it right and run bamphi once to learn
+%                       how info is structured.
 %
 % BAMPHI accepts the following options:
 %
@@ -58,12 +60,6 @@ function [ f, info ] = bamphi( t, A, At, u, opts, info )
 %                         else or unknown. Default is 0.
 %        - opts.fov_tol:  Tolerance in computing FoV. Default is 1e-3.
 %
-%
-% TODO:
-%
-% - fatti dare i punti
-% - handle almost zero solution case ( sqrt( v'*v ) == 0 and norm( v ) =/= 0)
-% - togli quel ( abs( cf_out( j ) ) < opts.tol * sqrt( w' * w ) ) dentro bamphi_krylovich se s > 1 che tanto non serve
 
   %% 01. CHECK INPUTS
   if ( nargin < 4 ), error('Not enough input arguments.'); end

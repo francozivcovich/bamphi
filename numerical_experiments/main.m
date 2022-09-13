@@ -1,4 +1,9 @@
 function main( verbosity )
+%
+% Here we collect the numerical experiments run for the bamphi manuscript.
+% For any question contact:
+%              Franco Zivcovich, franco.zivcovich@gmail.com
+%
 % if verbosity = 0, we display almost nothing
 % if verbosity > 0, we display some information
 % if verbosity = 1, we also display a short description of the experiment
@@ -16,13 +21,13 @@ function main( verbosity )
   addpath( genpath('../') )
 
   % Choose the tests you want to run
-  % (just comment the lines with the tests you DON'T want to run):
+  % (just comment the lines of the tests you DON'T want to run):
   which_tests{ 1 } = 'adr'; % Advection-Diffusion-Reaction equation
   which_tests{ 2 } = 'brg'; % Burger equation
-  which_tests{ 3 } = 'scS'; % smooth cubic Schrodinger equation
-  which_tests{ 4 } = 'sch'; % low-regularity cubic Schrodinger equation
+  which_tests{ 3 } = 'sch_S'; % smooth cubic Schrodinger equation
+  which_tests{ 4 } = 'sch_L'; % low-regularity cubic Schrodinger equation
   which_tests{ 5 } = 'skg'; % low-regularity cubic Schrodinger equation
-  which_tests{ 6 } = 'sac'; % Stochastic Allen-Cahn
+  which_tests{ 6 } = 'st_ac'; % Stochastic Allen-Cahn
 
 
   for test_idx = 1 : length( which_tests )
@@ -47,6 +52,7 @@ function main( verbosity )
         help ([test.integrator,'_bamphi'])
         fprintf('\n')
         help ([test.integrator,'_kiops'])
+        fprintf('\n DISCLAIMER: \n If it''s taking too long you can modify the space and time discretization by \n changing test.Ns and test.Nt in main.m.\n\n')
       end
       %
       memo = feval( test.equation, test );
@@ -83,6 +89,7 @@ function main( verbosity )
         help ([test.integrator,'_bamphi'])
         fprintf('\n')
         help ([test.integrator,'_kiops'])
+        fprintf('\n DISCLAIMER: \n If it''s taking too long you can modify the space and time discretization by \n changing test.Ns and test.Nt in main.m.\n\n')
       end
       %
       memo = feval( test.equation, test );
@@ -97,12 +104,12 @@ function main( verbosity )
       clear memo label test store
     end
 
-    if strcmp( which_tests{ test_idx }, 'scS' )
-      label = 'scS';
-      test.equation      = 'scS';
-      test.Ns            = [ 100, 100 ];
-      test.Nt            = 2.^[ 1 : 8 ];
-      test.integrator    = 'cuschss68';
+    if strcmp( which_tests{ test_idx }, 'sch_S' )
+      label = 'sch_S';
+      test.equation      = 'sch_S';
+      test.Ns            = [ 200, 200 ];
+      test.Nt            = 2.^[ 1 : 9 ];
+      test.integrator    = 'schss68';
       test.routines      = {'bamphi','kiops'};
       test.compute_error = true;
       %
@@ -117,6 +124,7 @@ function main( verbosity )
         help ([test.integrator,'_bamphi'])
         fprintf('\n')
         help ([test.integrator,'_kiops'])
+        fprintf('\n DISCLAIMER: \n If it''s taking too long you can modify the space and time discretization by \n changing test.Ns and test.Nt in main.m.\n\n')
       end
       %
       memo = feval( test.equation, test );
@@ -131,13 +139,13 @@ function main( verbosity )
       clear memo label test store
     end
 
-    if strcmp( which_tests{ test_idx }, 'sch' )
-      label = 'sch';
-      test.equation      = 'sch';
-      test.Ns            = [ 100 100 ];
-      test.Nt            = 2.^[ 3 : 11 ];
+    if strcmp( which_tests{ test_idx }, 'sch_L' )
+      label = 'sch_L';
+      test.equation      = 'sch_L';
+      test.Ns            = [ 200 200 ];
+      test.Nt            = 2.^[ 2 : 11 ];
       test.theta         = 5 / 2;
-      test.integrator    = 'cuschRS21';
+      test.integrator    = 'schexpli2s4';
       test.routines      = {'bamphi','kiops'};
       test.compute_error = true;
       %
@@ -152,6 +160,7 @@ function main( verbosity )
         help ([test.integrator,'_bamphi'])
         fprintf('\n')
         help ([test.integrator,'_kiops'])
+        fprintf('\n DISCLAIMER: \n If it''s taking too long you can modify the space and time discretization by \n changing test.Ns and test.Nt in main.m.\n\n')
       end
       %
       memo = feval( test.equation, test );
@@ -174,10 +183,10 @@ function main( verbosity )
       % RA: I compute Ritz's values with R and run calculations with A (only bamphi)
       label = 'skg';
       test.equation      = 'skg';
-      test.Ns            = [ 500 500 ] ;
+      test.Ns            = [ 500 500 ];
       test.Nt            = 2.^[ 4 : 11 ];
       test.integrator    = 'exptg2s1';
-      test.compute_error = false;
+      test.compute_error = true;
       %
       if verbosity > 0
         fprintf('Test launched on '),fprintf('\b'),disp(datetime(now,'ConvertFrom','datenum'))
@@ -190,6 +199,7 @@ function main( verbosity )
         help ([test.integrator,'_bamphi'])
         fprintf('\n')
         help ([test.integrator,'_kiops'])
+        fprintf('\n DISCLAIMER: \n If it''s taking too long you can modify the space and time discretization by \n changing test.Ns and test.Nt in main.m.\n\n')
       end
       %
 
@@ -221,13 +231,13 @@ function main( verbosity )
     end
 
 
-    if strcmp( which_tests{ test_idx }, 'sac' )
-      label = 'sac';
-      test.equation      = 'sac';
-      test.Ns            = [ 100 100 ];
-      test.Nt            = 2.^[ 2 : 11 ]; % important: timesteps must be one multiple of the other for stochasticity function
-      test.MoCa          = 1e2;
-      test.integrator    = 'stochexprk1';
+    if strcmp( which_tests{ test_idx }, 'st_ac' )
+      label = 'st_ac';
+      test.equation      = 'st_ac';
+      test.Ns            = [ 200 200 ];
+      test.Nt            = 2.^[ 1 : 8 ]; % important: timesteps must be one multiple of the other for stochasticity function
+      test.MoCa          = 100;%1e2;
+      test.integrator    = 'setdm1';
       test.routines      = {'bamphi','kiops'};
       test.compute_error = true;
       %
@@ -242,6 +252,7 @@ function main( verbosity )
         help ([test.integrator,'_bamphi'])
         fprintf('\n')
         help ([test.integrator,'_kiops'])
+        fprintf('\n DISCLAIMER: \n If it''s taking too long you can modify the space and time discretization by \n changing test.Ns and test.Nt in main.m.\n\n')
       end
       %
       memo = feval( test.equation, test );

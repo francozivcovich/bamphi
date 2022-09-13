@@ -8,8 +8,8 @@ function test_plotter( test2plot, plot_kind )
   marker.kiops  = '-x';
   save_fig  = true; path2png   = './results/png-figs/';
   % save_tikz = true; path2tikz  = './results/tikz-figs/';
-  % if save_tikz
-  %   addpath('/Users/francozeta/work/matlab2tikz-master/src')
+  % if save_tikz % Sorry: atm I don't have time to find a different way to do it.
+  %   addpath('/Users/francozeta/work/matlab2tikz-master/src') % just comment this and turn save_tikz to false pls
   % end
 
   % recover data
@@ -17,7 +17,7 @@ function test_plotter( test2plot, plot_kind )
   matFiles = dir( filePattern );
   for i = 1 : length( matFiles )
     dataName{ i } = matFiles( i ).name;
-    load( dataName{ i } )
+    load( [ './results/', dataName{ i } ] )
     test = fieldnames( store );
     for j = 1 : length( test )
       if not( nargin ) || isempty( test2plot )
