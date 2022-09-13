@@ -103,21 +103,11 @@ function memo = brg( test )
     disp(['- Running tests with ', test.routines{ rout } ]);
     aux = NaN;
     for l = 1 : length( Nt )
-      opts = []; info = [];
+      opts = []; info = []; clear_integrators()
       if     strcmp( test.routines{ rout }, 'bamphi' )
         opts.tol = tol; % opts.skew = 1;
-        clear epirk4s3a_bamphi
-        clear exprk4s6_bamphi
-        clear stochexprk1_bamphi
-        clear cuschRS21_bamphi
-        clear exptg2s1_bamphi
       elseif strcmp( test.routines{ rout }, 'kiops' )
         opts = tol;
-        clear epirk4s3a_kiops
-        clear exprk4s6_kiops
-        clear stochexprk1_kiops
-        clear cuschRS21_kiops
-        clear exptg2s1_kiops
       end
       clear matfun
       k = ( tf - t0 ) / Nt( l );

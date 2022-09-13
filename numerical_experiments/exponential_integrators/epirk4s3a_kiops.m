@@ -1,9 +1,14 @@
 function [ u, m_opt ] = epirk4s3a_kiops( u, k, t, Jfun, f, tol, m_opt );
-
+% epirk4s3a_kiops
+%
+% There is only one strategy to run this exponential integrator in combination
+% with kiops: the standard one.
+% It is extremely advantageous to remember the suggested Arnoldi size m_opt,
+% that is why we do output it.
+%
   if isempty( m_opt )
     m_opt = 10 * ones( 1,2 ); % set to default
   end
-  % m_opt
 
   fn = f( u );
   rfun = @(v) f( v ) - fn - Jfun( v - u );
