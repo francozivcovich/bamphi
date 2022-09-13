@@ -1,6 +1,16 @@
 function memo = skg( test )
-% SINE KLEIN GORDON equation:
-
+% Sine Klein-Gordon equation:
+%
+% Here we solve the 2-dimensional sine Klein-Gordon equation
+%
+% u_tt = Delta * u + sin( u )
+%
+% for Omega = [0,1]^2, t \in [0,1] and initial data u_t(0) = 256x^2y^2(1-x)^2 (1-y)^2
+% u(0) = 0. We set homogeneous Dirichlet boundary conditions. For the space
+% discretization of this problem we set 500 discretization points for each
+% dimension while for time marching we perform N_t = 16, 32, 64, 128, 256, 512,
+% 1024, and 2048 time steps with the second order trigonometric integrator exptg2s1.
+%
 
   mode = test.mode;
 
@@ -29,24 +39,31 @@ function memo = skg( test )
   function x = Lfun  ( x )
     x       = L  * x;
   end
+
   function x = Rfun  ( x )
     x       = R  * x( rs );
   end
+
   function x = Rtfun ( x )
     x( rs ) = Rt * x;
   end
+
   function x = iRfun ( x )
     x( rs ) = R  \ x;
   end
+
   function x = iRtfun( x )
     x       = Rt \ x( rs );
   end
+
   function x = RRS( x )
     x = [ x( N + 1 : 2 * N ); Lfun( x( 1 : N ) ) ];
   end
+
   function x = LRLR( x )
     x = [ Rtfun( x( N + 1 : 2 * N ) ); - Rfun( x( 1 : N ) ) ];
   end
+
 
   % Initial datum
   u0 = [ 0 * X(:);
@@ -64,6 +81,7 @@ function memo = skg( test )
          linearity = @(   x ) matfun( @( z ) RRS( z ), x );
          aux_linrt = @(   x ) matfun( @( z ) LRLR( z ), x );
       nonlinearity = @( t,x ) g( x );
+           aux_fun = @(   x ) matfun( @( z ) iRtfun( z ), x );
   end
 
   % Time discretization
@@ -86,7 +104,7 @@ function memo = skg( test )
     for iter = 1 : Ntref
       fprintf('\b\b\b\b%3.0f%%', 100 * iter / Ntref );
       if strcmp( test.mode,'RA' ) && strcmp( test.routines{ 1 },'bamphi' )
-        [ uref, info ] = feval( [ test.integrator, '_', test.routines{ 1 } ], uref, k, t, linearity, nonlinearity, opts, info, aux_linrt );
+        [ uref, info ] = feval( [ test.integrator, '_', test.routines{ 1 } ], uref, k, t, linearity, nonlinearity, opts, info, aux_linrt, aux_fun );
       else
         [ uref, info ] = feval( [ test.integrator, '_', test.routines{ 1 } ], uref, k, t, linearity, nonlinearity, opts, info );
       end
@@ -102,17 +120,11 @@ function memo = skg( test )
   for rout = 1 : length( test.routines )
     disp(['- Running tests with ', test.routines{ rout } ]);
     for l = 1 : length( Nt )
-      opts = []; info = [];
+      opts = []; info = []; clear_integrators()
       if     strcmp( test.routines{ rout }, 'bamphi' )
-        opts.tol = tol; %opts.scal_ref = false;
-        clear epirk4s3a_bamphi
-        clear exprk4s6_bamphi
-        clear exptg2s1_bamphi
+        opts.tol = tol;
       elseif strcmp( test.routines{ rout }, 'kiops' )
         opts = tol;
-        clear epirk4s3a_kiops
-        clear exprk4s6_kiops
-        clear exptg2s1_kiops
       end
       clear matfun
       k = ( tf - t0 ) / Nt( l );
@@ -121,7 +133,7 @@ function memo = skg( test )
       tic;
       for iter = 1 : Nt( l )
         if strcmp( test.mode,'RA' ) && strcmp( test.routines{ rout },'bamphi' )
-          [ u, info ] = feval( [ test.integrator, '_', test.routines{ rout } ], u, k, t, linearity, nonlinearity, opts, info, aux_linrt );
+          [ u, info ] = feval( [ test.integrator, '_', test.routines{ rout } ], u, k, t, linearity, nonlinearity, opts, info, aux_linrt, aux_fun );
         else
           [ u, info ] = feval( [ test.integrator, '_', test.routines{ rout } ], u, k, t, linearity, nonlinearity, opts, info );
         end
