@@ -1,14 +1,36 @@
-function memo = sac( test )
-% STOCHASTIC ALLEN CAHN equation:
-
+function memo = st_ac( test )
+% Stochastic Allen-Cahn equation:
+%
+% Here we solve the 2-dimensional stochastic extension of the Allen--Cahn
+% equation
+%
+% du = ( epsilon Delta * u + u - u^3 ) * dt + sin( u ) * dW
+%
+% for Omega = [-1,1]^2, t \in [0,0.025], and epsilon = 0.1. The initial data is
+% u(0) = sin( 2 pi x )sin( 2 pi y ), the noise term W(x,t) is a Q-Wiener process
+% defined on a filtered probability space that is white in time. The noise can
+% be represented as a series in the eigenfunctions of the covariance operator
+% Q given by
+%
+% W(x,t) = sum_{i \in \mathbb{N}^2} \sqrt{q_i} e_i(x) beta_i(t)
+%
+% where (q_i,e_i), i \in \mathbb{N}^2 are the eigenvalues and eigenfunctions of
+% the covariance operator $Q$ and $\beta_i$ are independent and identically
+% distributed standard Brownian motions. We set homogeneous Dirichlet boundary
+% conditions. For the space discretization of this problem we set N_x = N_y = 200
+% discretization points for each dimension while for time marching we perform
+% N_t = 2, 4, 8, 16, 32, 64, 128, and 256 time steps with the first order
+% stochastic exponential integrator SETDM1, in combination with a Monte Carlo
+% approach consisting of L = 100 launches.
+%
 
   % Equation parameters
   t0 = 0.00e+000;
-  tf = 0.25e-001;
+  tf = 0.125;%0.25e-001 * 10;
   omega.x.l =  - 1; omega.x.r = 1;
   omega.y.l =  - 1; omega.y.r = 1;
-  epsilon.x = 0.1;
-  epsilon.y = 0.1;
+  epsilon.x = 0.25; %0.1;
+  epsilon.y = 0.25; %0.1;
   alpha.x   = 1;
   alpha.y   = 1;
 
@@ -36,6 +58,7 @@ function memo = sac( test )
   jacobian = strncmp( test.integrator, 'epi', 3 ) || strncmp( test.integrator, 'exprb', 5 );
   if not( jacobian )
        linearity   = @(   x ) matfun( @( z ) Lfun( z ), x );
+       aux_linrt   = @(   x ) matfun( @( z ) L * z, x );
     nonlinearity.g = @( t,x ) g( x );
     nonlinearity.w = @( t,x ) w( x );
   end
@@ -57,7 +80,11 @@ function memo = sac( test )
     fprintf(['- Compute reference with ', num2str( Ntref ),' timesteps of ', test.integrator, ' in combination with ', test.routines{ 1 },': %3.0f%%'], 100 * 1 / Ntref );
     for iter = 1 : Ntref
       fprintf('\b\b\b\b%3.0f%%', 100 * iter / Ntref );
-      [ uref, info ] = feval( [ test.integrator, '_', test.routines{ 1 } ], uref, k, t, linearity, nonlinearity, opts, info );
+      if strcmp( test.routines{ 1 },'bamphi' )
+        [ uref, info ] = feval( [ test.integrator, '_', test.routines{ 1 } ], uref, k, t, linearity, nonlinearity, opts, info, aux_linrt );
+      else
+        [ uref, info ] = feval( [ test.integrator, '_', test.routines{ 1 } ], uref, k, t, linearity, nonlinearity, opts, info );
+      end
       t = t + k;
     end
   end
@@ -67,15 +94,11 @@ function memo = sac( test )
   for rout = 1 : length( test.routines )
     disp(['- Running tests with ', test.routines{ rout } ]);
     for l = 1 : length( Nt )
-      opts = []; info = [];
+      opts = []; info = []; clear_integrators()
       if     strcmp( test.routines{ rout }, 'bamphi' )
         opts.tol = tol;
-        clear epirk4s3a_bamphi
-        clear exprk4s6_bamphi
       elseif strcmp( test.routines{ rout }, 'kiops' )
         opts = tol;
-        clear epirk4s3a_kiops
-        clear exprk4s6_kiops
       end
       clear matfun
       k = ( tf - t0 ) / Nt( l );
@@ -84,7 +107,11 @@ function memo = sac( test )
       u = u0;
       tic;
       for iter = 1 : Nt( l )
-        [ u, info ] = feval( [ test.integrator, '_', test.routines{ rout } ], u, k, t, linearity, nonlinearity, opts, info );
+        if strcmp( test.routines{ 1 },'bamphi' )
+          [ u, info ] = feval( [ test.integrator, '_', test.routines{ rout } ], u, k, t, linearity, nonlinearity, opts, info, aux_linrt );
+        else
+          [ u, info ] = feval( [ test.integrator, '_', test.routines{ rout } ], u, k, t, linearity, nonlinearity, opts, info );
+        end
         t = t + k;
       end % marching
       [ ~, mv ] = matfun( NaN,NaN );
