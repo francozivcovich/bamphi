@@ -1,5 +1,18 @@
-function memo = sch( test )
-% NONSMOOTH CUBIC SCHRODINGER equation:
+function memo = sch_L( test )
+% Low-regularity initial data cubic Schrodinger equation:
+%
+% Here we solve the 2-dimensional cubic Schrodinger equation
+%
+% i * u_t = - Delta * u + mu |u|^2 u
+%
+% with Omega = [0,1]^2, t \in [0,0.1], mu = 1. The initial data is randomly
+% generated in H^5/2 and we set homogeneous Dirichlet boundary conditions. For
+% the space discretization of this problem we set N_x = N_y = 200 discretization
+% points for each dimension while for time marching we perform N_t = 4, 8, 16,
+% 32, 64, 128, 256, 512, 1024, and 2048 time steps with the second order Strang
+% Splitting integrator schss68.
+%
+
   % Equation parameters
   t0 = 0.00e+000;
   tf = 0.10e+000;
@@ -59,15 +72,11 @@ function memo = sch( test )
   for rout = 1 : length( test.routines )
     disp(['- Running tests with ', test.routines{ rout } ]);
     for l = 1 : length( Nt )
-      opts = []; info = [];
+      opts = []; info = []; clear_integrators()
       if     strcmp( test.routines{ rout }, 'bamphi' )
         opts.tol = tol;
-        clear cuschRS21_bamphi
-        clear cuschss68_bamphi
       elseif strcmp( test.routines{ rout }, 'kiops' )
         opts = tol;
-        clear cuschRS21_kiops
-        clear cuschss68_kiops
       end
       clear matfun
       k = ( tf - t0 ) / Nt( l );
