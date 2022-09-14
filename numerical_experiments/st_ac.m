@@ -107,7 +107,7 @@ function memo = st_ac( test )
       u = u0;
       tic;
       for iter = 1 : Nt( l )
-        if strcmp( test.routines{ 1 },'bamphi' )
+        if strcmp( test.routines{ rout },'bamphi' )
           [ u, info ] = feval( [ test.integrator, '_', test.routines{ rout } ], u, k, t, linearity, nonlinearity, opts, info, aux_linrt );
         else
           [ u, info ] = feval( [ test.integrator, '_', test.routines{ rout } ], u, k, t, linearity, nonlinearity, opts, info );
