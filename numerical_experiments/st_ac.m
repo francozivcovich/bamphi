@@ -119,7 +119,7 @@ function memo = st_ac( test )
       memo.(test.integrator).(test.routines{ rout }).clock( l ) = toc;
       memo.(test.integrator).(test.routines{ rout }).matve( l ) = mv;
       if test.compute_error
-        memo.(test.integrator).(test.routines{ rout }).error( l ) = norm( u - uref, inf ) / norm( uref, inf );
+        memo.(test.integrator).(test.routines{ rout }).error( l ) = norm( mean( u, 2 ) - mean( uref, 2 ), inf ) / norm( mean( uref, 2 ), inf );
       end
       if strcmp( test.routines{ rout },'bamphi' )
         memo.(test.integrator).(test.routines{ rout }).info{ l } = info;
@@ -132,7 +132,7 @@ end
 
 function dW_stash = stoch_init( dtref, Nt, Ntref, Ns, omega, MoCa )
 
-  load('seed.mat'), rng(my_seed),
+  load('seed.mat'), rng( my_seed ),
   disp([ '      stoch_init: resetted seed: ', num2str( randn ) ]);
   tic
 
@@ -143,9 +143,14 @@ function dW_stash = stoch_init( dtref, Nt, Ntref, Ns, omega, MoCa )
 
   for j = 1 : length( Nt )
     for i = 1 : Nt( j )
-      dW_stash{ j, i } = get_2D_dW( bj, Ntref / Nt( j ), MoCa );
+      k = Ntref / Nt(j);
+      dW_stash{ j, i } = 0;
+      for l = 1 : k
+        dW_stash{ j, i } = dW_stash{ j, i } + dW_stash{ length( Nt ) + 1, l + ( i - 1 ) * k };
+      end
     end
   end
+
   %
   disp(['      stoch_init: done initializing stochasticity in ', num2str(toc),' secs.']);
 

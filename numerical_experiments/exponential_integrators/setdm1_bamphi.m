@@ -33,7 +33,6 @@ function [ u, info ] = setdm1_bamphi( u, k, t, A, nonlin, opts, info, B )
 
   [ du, info ]  = bamphi( k, A, [], [ zeros( numel( u ),1 ),  A( u(:) + nonlin.w( t,u(:) ) .* dW(:) ) + nonlin.g( t, u(:) ) ], opts, info );
   store_info{ 1 } = info;
-  u = u + reshape( du, size( u ) );
-  % u = u + reshape( du + nonlin.w( t,u(:) ) .* dW(:), size( u ) );
+  u = u + reshape( du + nonlin.w( t,u(:) ) .* dW(:), size( u ) );
 
 end

@@ -18,7 +18,6 @@ function [ u, m_opt ] = setdm1_kiops( u, k, t, A, nonlin, tol, m_opt )
   dW = memo_stoch( step );
 
   [ du, m_opt ] = kiops( k, A, [ zeros( numel( u ),1 ),  A( u(:) + nonlin.w( t,u(:) ) .* dW(:) ) + nonlin.g( t, u(:) ) ], tol, m_opt, [], [], false );
-  u = u + reshape( du, size( u ) );
-  % u = u + reshape( du + nonlin.w( t,u(:) ) .* dW(:), size( u ) );
+  u = u + reshape( du + nonlin.w( t,u(:) ) .* dW(:), size( u ) );
 
 end
